@@ -1,4 +1,5 @@
 from sqlalchemy.ext.associationproxy import association_proxy
+
 from .. import db
 
 
@@ -7,4 +8,4 @@ class Household(db.Model):
 
     household_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     type = db.Column(db.SmallInteger, unique=False, nullable=True, default=0, server_default="0")
-    member = association_proxy('household_member', 'member')
+    members = association_proxy('household_member', 'member')

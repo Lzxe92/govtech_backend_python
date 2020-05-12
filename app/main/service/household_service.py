@@ -42,7 +42,7 @@ def create_new_household_member(household_id, member_id):
         }
         return response_object, 400
 
-    household.member.append(member)
+    household.members.append(member)
     save_changes(household)
 
     response_object = {

@@ -1,8 +1,11 @@
 from flask_restx import Namespace, fields
 
+from app.main.util.member_dto import MemberDto
+
 
 class HouseholdDto:
     api = Namespace('household', description='household related operations')
+    member = MemberDto.member
     household = api.model('household', {
         'household_id': fields.Integer(required=False, description='Identifier of the household'),
         'type': fields.Integer(
@@ -10,5 +13,8 @@ class HouseholdDto:
             description='housing type, 1= HDB, 2=Condo, 3= Landed',
             min=0,
             max=4
+        ),
+        'members': fields.List(
+            fields.Nested(member, required=True)
         )
     })
