@@ -15,6 +15,6 @@ class HouseholdDto:
             max=4
         ),
         'members': fields.List(
-            fields.Nested(member, required=True)
+            fields.Nested(member, required=False)
         )
     })
