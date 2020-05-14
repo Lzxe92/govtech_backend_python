@@ -12,7 +12,7 @@ class HouseholdDto:
             required=True,
             description='housing type, 1= HDB, 2=Condo, 3= Landed',
             min=1,
-            max=4
+            max=3
         ),
         'members': fields.List(
             fields.Nested(member, required=False)

@@ -49,6 +49,13 @@ class User(Resource):
         else:
             return household
 
+    @api.doc('delete and members inside')
+    @api.response(204, 'Delete successful.')
+    @api.response(404, 'User not found.')
+    def delete(self, household_id):
+        result = delete_household_and_members(household_id)
+        return result
+
 
 @api.route('/search')
 @api.doc(params=

@@ -69,6 +69,22 @@ def get_a_household(household_id):
     return Household.query.filter_by(household_id=household_id).first()
 
 
+def delete_household_and_members(household_id):
+    household = Household.query.filter_by(household_id=household_id).first()
+    if not household:
+        response_object = {
+            'status': 'fail',
+            'message': 'Household id given is not found.'
+        }
+        return response_object, 404
+    db.session.delete(household)
+    for member in household.members:
+        db.session.delete(member)
+    db.session.commit()
+    # delete successful, 204 no content
+    return {}, 204
+
+
 def get_all_household_student_with_filter(request=None):
     "Fulfills the following criteria"
     "1.Households with children of less than {age} years old"
