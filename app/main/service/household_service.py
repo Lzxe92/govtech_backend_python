@@ -68,7 +68,10 @@ def get_all_household():
 def get_a_household(household_id):
     return Household.query.filter_by(household_id=household_id).first()
 
-
+""" 
+delete all members found from the household from the database and also delete the household from database
+remove the association in the process
+"""
 def delete_household_and_members(household_id):
     household = Household.query.filter_by(household_id=household_id).first()
     if not household:
@@ -86,10 +89,8 @@ def delete_household_and_members(household_id):
 
 
 def get_all_household_student_with_filter(request=None):
-    "Fulfills the following criteria"
-    "1.Households with children of less than {age} years old"
-    "2.Household income of less than ${total_income}."
     household_list = []
+    # Search filter
     if "age" in request:
         less_than_age_set = set()
         result = db.session.query(Household). \
@@ -102,6 +103,7 @@ def get_all_household_student_with_filter(request=None):
             less_than_age_set.add(household)
         household_list.append(less_than_age_set)
 
+    #total_income filter
     if "total_income" in request:
         total_income_set = set()
         result = db.session.query(Household). \
@@ -113,11 +115,17 @@ def get_all_household_student_with_filter(request=None):
         for household in result.all():
             total_income_set.add(household)
         household_list.append(total_income_set)
+    """ 
+    Households with husband & wife 
+    Using raw query instead of orm 
+    to hit the criteria, both husband and wife must have their spouse_nric belong to the opposing party
+    marital_status request parameter to be set as eq1
+    """
     if "marital_status" in request and \
             request["marital_status"]["value"] == "1" and \
             request["marital_status"]["operator"] == "eq":
         marrital_status_set = set()
-        # Husband and wife query, unsure of the orm, use raw sql instead hahah.
+
         result = db.engine.execute(
             "select household.household_id from member "
             "INNER join household_member on member.member_id = household_member.member_id  "
@@ -132,7 +140,11 @@ def get_all_household_student_with_filter(request=None):
         for household in result.all():
             marrital_status_set.add(household)
         household_list.append(marrital_status_set)
-
+    """ 
+    Households Type search critera 
+    usng orm to filter and get the housetype based on the parameter household_type 
+    EG household_type=eq1, means household with type =1
+    """
     if "household_type" in request and request["household_type"]["value"]:
         result = Household.query.filter_by(type=request["household_type"]["value"])
         household_type_set = set()
@@ -148,7 +160,10 @@ def get_all_household_student_with_filter(request=None):
         result = result.intersection(household)
     return list(result)
 
-
+""" 
+delete memeber from household. It remove the association in household_member.
+It does not delete member from the database.
+"""
 def delete_member_from_household(household_id, member_id):
     household_member = HouseholdMember.query.filter_by(household_id=household_id, member_id=member_id).first()
     if not household_member:
