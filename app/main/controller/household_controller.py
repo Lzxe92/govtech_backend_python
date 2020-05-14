@@ -34,6 +34,12 @@ class HouseholdList(Resource):
         """Add member into household """
         return create_new_household_member(household_id, member_id)
 
+    @api.response(204, 'Delete successful.')
+    @api.response(404, 'Member not found in the household')
+    def delete(self, household_id, member_id):
+        """Remove Family Member from the Household. """
+        return delete_member_from_household(household_id, member_id)
+
 
 @api.route('/<int:household_id>')
 @api.param('household_id', 'The Household identifier')
@@ -51,7 +57,7 @@ class User(Resource):
 
     @api.doc('delete and members inside')
     @api.response(204, 'Delete successful.')
-    @api.response(404, 'User not found.')
+    @api.response(404, 'Household not found.')
     def delete(self, household_id):
         result = delete_household_and_members(household_id)
         return result

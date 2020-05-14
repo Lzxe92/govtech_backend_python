@@ -149,6 +149,19 @@ def get_all_household_student_with_filter(request=None):
     return list(result)
 
 
+def delete_member_from_household(household_id, member_id):
+    household_member = HouseholdMember.query.filter_by(household_id=household_id, member_id=member_id).first()
+    if not household_member:
+        response_object = {
+            'status': 'fail',
+            'message': 'Member not found in the household.',
+        }
+        return response_object, 404
+    db.session.delete(household_member)
+    db.session.commit()
+    return {}, 204
+
+
 opeartor = {
     'lt': operator.lt,
     'gt': operator.gt,
