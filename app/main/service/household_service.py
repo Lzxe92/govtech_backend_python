@@ -125,7 +125,7 @@ def get_all_household_student_with_filter(request=None):
             "inner join member m2 on member.spouse_nric = m2.spouse_nric "
             "where member.marital_status=1 "
             "GROUP BY household.household_id "
-            "having count(household.household_id) =2")
+            "having count(household.household_id) >=2")
 
         married_house_hold_list = [row[0] for row in result]
         result = db.session.query(Household).filter(Household.household_id.in_(married_house_hold_list))
