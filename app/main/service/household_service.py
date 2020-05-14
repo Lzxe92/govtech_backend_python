@@ -38,11 +38,11 @@ def create_new_household_member(household_id, member_id):
         }
         return response_object, 404
 
-    household_member = HouseholdMember.query.filter_by(household_id=household_id, member_id=member_id).first()
+    household_member = HouseholdMember.query.filter_by(member_id=member_id).first()
     if household_member:
         response_object = {
             'status': 'fail',
-            'message': 'Member is already in the household.',
+            'message': 'Member is already in a household. (one member can only be in one household)',
         }
         return response_object, 400
 
