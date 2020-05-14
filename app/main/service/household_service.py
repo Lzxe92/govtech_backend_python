@@ -117,6 +117,14 @@ def get_all_household_student_with_filter(request=None):
             marrital_status_set.add(household)
         household_list.append(marrital_status_set)
 
+    if "household_type" in request and request["household_type"]["value"]:
+        result = Household.query.filter_by(type=request["household_type"]["value"])
+        household_type_set = set()
+        for household in result.all():
+            household_type_set.add(household)
+        print(household_type_set)
+        household_list.append(household_type_set)
+
     if not household_list:
         return []
     result = household_list[0]
@@ -132,12 +140,6 @@ opeartor = {
     'eq': operator.eq,
     'ne': operator.ne,
     'ge': operator.ge,
-    # '<': operator.lt,
-    # '>': operator.gt,
-    # # '<=': operator.le,
-    # # '==': operator.eq,
-    # # '!=': operator.ne,
-    # # '>=': operator.ge,
 }
 
 

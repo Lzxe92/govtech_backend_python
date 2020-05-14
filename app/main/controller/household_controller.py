@@ -52,11 +52,18 @@ class User(Resource):
 
 @api.route('/search')
 @api.doc(params=
-         {'age': {'description': 'Less than the age', 'in': 'query', 'type': 'int'},
-          'total_income': {'description': 'Total household income less than the specified amount',
+         {'age': {'description': 'search parameter for a member in a household wit age, eg. lt29 (Less than 29)',
+                  'in': 'query', 'type': 'string'},
+
+          'total_income': {'description': 'search parameter for household income, eg. lt9000',
                            'in': 'query',
-                           'type': 'float'}
-          })
+                           'type': 'string'},
+          'marital_status': {'description': 'if there is a couple in same household, eg. eg1',
+                             'in': 'query',
+                             'type': 'string'},
+          'household_type': {'description': 'type of the household, eg. eg1',
+                             'in': 'query',
+                             'type': 'string'}})
 class Household(Resource):
     @api.marshal_list_with(_household)
     def get(self, ):
@@ -64,7 +71,7 @@ class Household(Resource):
         data = {}
 
         # Transforming all request into search parameters
-        allowed_request_filters = ["age", "total_income", "marital_status"]
+        allowed_request_filters = ["age", "total_income", "marital_status", "household_type"]
         for item in request.args:
             # filtering allowed parameters for search
             if item not in allowed_request_filters:

@@ -11,7 +11,7 @@ class HouseholdDto:
         'type': fields.Integer(
             required=True,
             description='housing type, 1= HDB, 2=Condo, 3= Landed',
-            min=0,
+            min=1,
             max=4
         ),
         'members': fields.List(
