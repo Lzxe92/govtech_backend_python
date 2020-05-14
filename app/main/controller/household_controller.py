@@ -21,23 +21,21 @@ class HouseholdList(Resource):
     def post(self):
         """Creates a new Household """
         data = request.json
-        # data = api.payload
         return create_new_household(data)
 
 
-@api.route('/<household_id>/member/<member_id>')
+@api.route('/<int:household_id>/member/<int:member_id>')
 @api.param('household_id', 'The Household identifier')
 @api.param('member_id', 'The Member identifier')
 class HouseholdList(Resource):
     @api.response(201, 'Member added to household.')
     @api.doc('add household to member')
     def post(self, household_id, member_id):
-        """Creates a new Household """
-        # data = api.payload
+        """Add member into household """
         return create_new_household_member(household_id, member_id)
 
 
-@api.route('/<household_id>')
+@api.route('/<int:household_id>')
 @api.param('household_id', 'The Household identifier')
 @api.response(404, 'User not found.')
 class User(Resource):
@@ -50,3 +48,21 @@ class User(Resource):
             api.abort(404)
         else:
             return household
+
+
+@api.route('/search')
+@api.doc(params=
+         {'age': {'description': 'Less than the age', 'in': 'query', 'type': 'int'},
+          'total_income': {'description': 'Total household income less than the specified amount',
+                           'in': 'query',
+                           'type': 'float'}
+          })
+class Household(Resource):
+    @api.marshal_list_with(_household)
+    def get(self, ):
+        """get Households and filter by search parameters"""
+        data = {}
+        data["age"] = request.args.get('age')
+        data["total_income"] = request.args.get('total_income')
+        data = get_all_household_student_with_filter(data)
+        return data;
