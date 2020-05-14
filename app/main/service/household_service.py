@@ -1,3 +1,5 @@
+import operator
+
 import sqlalchemy
 from sqlalchemy import extract, func
 
@@ -67,26 +69,56 @@ def get_a_household(household_id):
     return Household.query.filter_by(household_id=household_id).first()
 
 
-def get_all_household_student_with_filter(data=None):
+def get_all_household_student_with_filter(request=None):
     "Fulfills the following criteria"
     "1.Households with children of less than {age} years old"
     "2.Household income of less than ${total_income}."
-    less_than_age_set = set()
-    if data['age']:
+    household_list = []
+    if "age" in request:
+        less_than_age_list = set()
         result = db.session.query(Household). \
             join(*Household.members.attr). \
-            filter(func.TIMESTAMPDIFF(sqlalchemy.text('YEAR'), Member.dob, sqlalchemy.text('CURDATE()')) <= data['age'])
+            filter(
+            cmp(func.TIMESTAMPDIFF(sqlalchemy.text('YEAR'), Member.dob, sqlalchemy.text('CURDATE()')),
+                request["age"]["operator"],
+                request["age"]["value"]))
         for household in result.all():
-            less_than_age_set.add(household)
+            less_than_age_list.add(household)
+        household_list.append(less_than_age_list)
 
-    less_than_income_set = set()
-    if data['total_income']:
+    if "total_income" in request:
+        total_income_list = set()
         result = db.session.query(Household). \
             join(*Household.members.attr). \
-            group_by(Household.household_id).having(func.sum(Member.annual_income) < data["total_income"])
+            group_by(Household.household_id).having(
+            cmp(func.sum(Member.annual_income),
+                request["total_income"]["operator"],
+                request["total_income"]['value']))
         for household in result.all():
-            less_than_income_set.add(household)
-    return list(less_than_age_set & less_than_income_set)
+            total_income_list.add(household)
+        household_list.append(total_income_list)
+
+    if not household_list:
+        return []
+    result = household_list[0]
+    for household in household_list:
+        result = result.intersection(household)
+    return list(result)
+
+
+ops = {
+    '<': operator.lt,
+    '>': operator.gt,
+    # '<=': operator.le,
+    # '==': operator.eq,
+    # '!=': operator.ne,
+    # '>=': operator.ge,
+}
+
+
+def cmp(arg1, op, arg2):
+    operation = ops.get(op)
+    return operation(arg1, arg2)
 
 
 def save_changes(data):

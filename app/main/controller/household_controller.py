@@ -62,7 +62,31 @@ class Household(Resource):
     def get(self, ):
         """get Households and filter by search parameters"""
         data = {}
-        data["age"] = request.args.get('age')
-        data["total_income"] = request.args.get('total_income')
-        data = get_all_household_student_with_filter(data)
-        return data;
+
+        # Transforming all request into search parameters
+        allowed_fillters = ["age","total_income"]
+        for item in request.args:
+            # filtering allowed parameters for search
+            if item not in allowed_fillters:
+                continue
+            if request.args.get(item):
+                if not transform_parameter(request.args.get(item)):
+                    api.abort(400)
+                data[item] = transform_parameter(request.args.get(item))
+        result = get_all_household_student_with_filter(data)
+        return result
+
+
+def transform_parameter(param):
+    data = {"value": None, "operator": None}
+    opeartor = {'<', '>'}
+    try:
+        if param[:1] not in opeartor:
+            return None
+        if not param[1:].isdigit():
+            return None
+        data["operator"] = param[:1]
+        data["value"] = param[1:]
+    except:
+        print("An exception occurred")
+    return data
