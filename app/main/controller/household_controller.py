@@ -64,10 +64,10 @@ class Household(Resource):
         data = {}
 
         # Transforming all request into search parameters
-        allowed_fillters = ["age","total_income"]
+        allowed_request_filters = ["age", "total_income", "marital_status"]
         for item in request.args:
             # filtering allowed parameters for search
-            if item not in allowed_fillters:
+            if item not in allowed_request_filters:
                 continue
             if request.args.get(item):
                 if not transform_parameter(request.args.get(item)):
@@ -79,14 +79,13 @@ class Household(Resource):
 
 def transform_parameter(param):
     data = {"value": None, "operator": None}
-    opeartor = {'<', '>'}
     try:
-        if param[:1] not in opeartor:
+        if param[:2] not in opeartor:
             return None
-        if not param[1:].isdigit():
+        if not param[2:].isdigit():
             return None
-        data["operator"] = param[:1]
-        data["value"] = param[1:]
+        data["operator"] = param[:2]
+        data["value"] = param[2:]
     except:
         print("An exception occurred")
     return data

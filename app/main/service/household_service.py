@@ -75,7 +75,7 @@ def get_all_household_student_with_filter(request=None):
     "2.Household income of less than ${total_income}."
     household_list = []
     if "age" in request:
-        less_than_age_list = set()
+        less_than_age_set = set()
         result = db.session.query(Household). \
             join(*Household.members.attr). \
             filter(
@@ -83,11 +83,11 @@ def get_all_household_student_with_filter(request=None):
                 request["age"]["operator"],
                 request["age"]["value"]))
         for household in result.all():
-            less_than_age_list.add(household)
-        household_list.append(less_than_age_list)
+            less_than_age_set.add(household)
+        household_list.append(less_than_age_set)
 
     if "total_income" in request:
-        total_income_list = set()
+        total_income_set = set()
         result = db.session.query(Household). \
             join(*Household.members.attr). \
             group_by(Household.household_id).having(
@@ -95,8 +95,27 @@ def get_all_household_student_with_filter(request=None):
                 request["total_income"]["operator"],
                 request["total_income"]['value']))
         for household in result.all():
-            total_income_list.add(household)
-        household_list.append(total_income_list)
+            total_income_set.add(household)
+        household_list.append(total_income_set)
+    if "marital_status" in request and \
+            request["marital_status"]["value"] == "1" and \
+            request["marital_status"]["operator"] == "eq":
+        marrital_status_set = set()
+        # Husband and wife query, unsure of the orm, use raw sql instead hahah.
+        result = db.engine.execute(
+            "select household.household_id from member "
+            "INNER join household_member on member.member_id = household_member.member_id  "
+            "INNER join household on household_member.household_id = household.household_id "
+            "inner join member m2 on member.spouse_nric = m2.spouse_nric "
+            "where member.marital_status=1 "
+            "GROUP BY household.household_id "
+            "having count(household.household_id) =2")
+
+        married_house_hold_list = [row[0] for row in result]
+        result = db.session.query(Household).filter(Household.household_id.in_(married_house_hold_list))
+        for household in result.all():
+            marrital_status_set.add(household)
+        household_list.append(marrital_status_set)
 
     if not household_list:
         return []
@@ -106,18 +125,24 @@ def get_all_household_student_with_filter(request=None):
     return list(result)
 
 
-ops = {
-    '<': operator.lt,
-    '>': operator.gt,
-    # '<=': operator.le,
-    # '==': operator.eq,
-    # '!=': operator.ne,
-    # '>=': operator.ge,
+opeartor = {
+    'lt': operator.lt,
+    'gt': operator.gt,
+    'le': operator.le,
+    'eq': operator.eq,
+    'ne': operator.ne,
+    'ge': operator.ge,
+    # '<': operator.lt,
+    # '>': operator.gt,
+    # # '<=': operator.le,
+    # # '==': operator.eq,
+    # # '!=': operator.ne,
+    # # '>=': operator.ge,
 }
 
 
 def cmp(arg1, op, arg2):
-    operation = ops.get(op)
+    operation = opeartor.get(op)
     return operation(arg1, arg2)
 
 

@@ -27,7 +27,7 @@ class MemberDto:
             description='0= not married, 1= married',
             default=0,
             min=0,
-            max=1
+            max=2
         ),
         'spouse_nric': fields.String(
             required=False,
