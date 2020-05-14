@@ -28,7 +28,7 @@ def upgrade():
     sa.Column('nric', sa.CHAR(length=9), nullable=False),
     sa.Column('name', sa.String(length=255), nullable=False),
     sa.Column('gender', sa.SmallInteger(), server_default='0', nullable=False),
-    sa.Column('dob', sa.DateTime(), nullable=False),
+    sa.Column('dob', sa.Date(), nullable=False),
     sa.Column('annual_income', sa.Float(), server_default='0', nullable=False),
     sa.Column('occupation_type', sa.SmallInteger(), server_default='0', nullable=False),
     sa.Column('marital_status', sa.SmallInteger(), server_default='0', nullable=False),

@@ -13,7 +13,7 @@ class MemberDto:
             min=1,
             max=2
         ),
-        'dob': fields.DateTime(required=True, description='DOB of the member'),
+        'dob': fields.Date(required=True, description='DOB of the member'),
         'annual_income': fields.Float(required=True, description='Annual income of the member'),
         'occupation_type': fields.Integer(
             required=False,

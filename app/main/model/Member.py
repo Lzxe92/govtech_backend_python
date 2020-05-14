@@ -10,7 +10,7 @@ class Member(db.Model):
     nric = db.Column(db.CHAR(9), unique=True, nullable=False)
     name = db.Column(db.String(255), nullable=False)
     gender = db.Column(db.SmallInteger, nullable=False, default=1, server_default="0")
-    dob = db.Column(db.DateTime, nullable=False)
+    dob = db.Column(db.Date, nullable=False)
     annual_income = db.Column(db.Float, unique=False, nullable=False, default=0, server_default="0")
     occupation_type = db.Column(db.SmallInteger, nullable=False, default=0, server_default="0")
     marital_status = db.Column(db.SmallInteger, nullable=False, default=1, server_default="0")
