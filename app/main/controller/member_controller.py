@@ -24,7 +24,8 @@ class MemberList(Resource):
         """Creates a new Member """
         data = request.json
         # data = api.payload
-        return create_new_member(data)
+        result = create_new_member(data)
+        return result["response"], result["status_code"]
 
 
 @api.route('/<member_id>')
