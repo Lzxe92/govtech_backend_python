@@ -53,7 +53,7 @@ def seed():
         name="Lee Ah Bah",
         gender=1,
         dob="1958-05-21",
-        annual_income=41600,
+        annual_income=21600,
         occupation_type=0,
         marital_status=1,
         spouse_nric="S0910139Z"
@@ -64,7 +64,7 @@ def seed():
         name="Lilis",
         gender=2,
         dob="1965-05-21",
-        annual_income=51600,
+        annual_income=31600,
         occupation_type=2,
         marital_status=1,
         spouse_nric="S0910139Z"
@@ -84,9 +84,9 @@ def seed():
         nric="S910104Z",
         name="Joan Lee",
         gender=2,
-        dob="1991-05-21",
-        annual_income=80000,
-        occupation_type=2,
+        dob="2019-05-21",
+        annual_income=0,
+        occupation_type=0,
         marital_status=0
     ))
 

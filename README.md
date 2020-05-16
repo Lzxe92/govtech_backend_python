@@ -109,17 +109,104 @@ a [flask](https://flask.palletsprojects.com/) application
     --header 'accept: application/json' \
     --header 'Content-Type: application/json'
     ```   
-2.
+2.  Add a family member to household
+    
+    It's actually described above under 1.b)
+    
+3.  List households
+    ```       
+    curl --location --request GET 'http://127.0.0.1:5000/household'
+    ```   
+4.  Show household
 
- 
+    Below is an example of showing household under the household_id 1
+    ```   
+    curl --location --request GET 'http://127.0.0.1:5000/household/1' 
+    ```      
+5.  Search for households and recipients of grant disbursement endpoint
 
+    This API allows the use of search parameters with values to filter out 
+    household that are eligible for grant disbursement. They work as an AND operation,
+    search will be filtered based on the parameters provided and the values.
+    The values will consist of operator followed by operand. 
+    
+    EG. search?age=lt16
+    ```         
+    household with someone age less than 16
+    ```         
+    
+    EG. search?age=lt16&total_income=lt150000
+    ```   
+     (Household with someone age less than 16) AND (Household with total income less than $150,000)
+    ```       
+    The following are the search parameters allowed and the defination
+    
+    1. age
+    2. total_income
+    3. marital_status
+    4. household_type
+    
+    The following are the operator parameters allowed, followed by the defination
+    
+    1. lt   (Less than)
+    2. gt   (Greater than)
+    3. le   (Less than and equal to)
+    4. eq   (Equal to)
+    5. ne   (Not equal)
+    6. ge   (greater than and equal to)
+    
+    The following below are the endpoints to filter out household eligibility for bonus
+    
+    1. List households and qualifying family members for <b>Student Encouragement Bonus</b>
+        1. Households with children of less than 16 years old
+        2. Household income of less than $150,000.
+
+        ```   
+        curl --location --request GET 'http://127.0.0.1:5000/household/search?age=lt16&total_income=lt150000'
+        ```          
+    
+    2. List households and qualifying family members for <b>Family Togetherness Scheme</b>
+        1. Households with husband & wife
+        2. Has child(ren) younger than 18 years old.
+
+        ```   
+        curl --location --request GET 'http://127.0.0.1:5000/household/search?age=lt18&marital_status=eq1'
+        ```                   
+       
+    3. List households and qualifying family members for <b>Elder Bonus</b>
+        1. HDB household with family members above the age of 50
+
+        ```   
+        curl --location --request GET 'http://127.0.0.1:5000/household/search?age=gt50&household_type=eq1'
+        ```           
+                  
+    4. List households and qualifying family members for <b>Baby Sunshine Grant</b>
+        1. Household with young children younger than 5.
+
+        ```   
+       curl --location --request GET 'http://127.0.0.1:5000/household/search?age=lt50'
+        ```
+       
+    5. List households that qualify for the <b>YOLO GST Grant</b>
+        1. HDB households with annual income of less than $100,000.
+
+        ```   
+       curl --location --request GET 'http://127.0.0.1:5000/household/search?age=lt5'
+        ```                 
+6.  Show Member
+
+    Below is an example of showing household under the member_id 1
+    ```   
+    curl --location --request GET 'http://127.0.0.1:5000/member/1' 
+    ```       
 ### Links
 
 + [Flask documentations](https://flask.palletsprojects.com/en/1.1.x/)
++ [Sqlalchemy documentation (Database layer)](https://www.sqlalchemy.org/)
 
 ### Coding guideline
 
-* Use strictly waterline query
+* Use orm query
 * split common used codes into services (Services in MVCS)
 * thin controller, fat model (services and models are models)
 
