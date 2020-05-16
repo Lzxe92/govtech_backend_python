@@ -71,11 +71,6 @@ def create_new_household_member(household_id, member_id):
 
 
 def get_all_household():
-    db.session
-    return [
-        {"household_id": 1, "type": 2,
-         "members": [{"name": "wtf"}]}
-    ]
     return Household.query.all()
 
 
