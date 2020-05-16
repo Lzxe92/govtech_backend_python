@@ -1,3 +1,5 @@
+from sqlalchemy import or_
+
 from app.main import db
 from app.main.model.Member import Member
 from app.main.util.wrapper import create_service_response
@@ -43,3 +45,20 @@ def get_a_member(member_id):
 def save_changes(data):
     db.session.add(data)
     db.session.commit()
+
+
+# validate no duplicates for member insertion
+def validate_members_insertion(data):
+    member_nric_list = []
+    member_spouse_id_list = []
+    for member in data:
+        if member["nric"]:
+            member_nric_list.append(member["nric"])
+        if member["spouse_nric"]:
+            member_spouse_id_list.append(member["spouse_nric"])
+    result = db.session.query(Member).filter(or_(
+        Member.nric.in_(member_nric_list),
+        Member.spouse_nric.in_(member_spouse_id_list)
+    )
+    ).all()
+    return result

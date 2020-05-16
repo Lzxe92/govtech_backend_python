@@ -7,12 +7,26 @@ from app.main import db
 from app.main.model.Household import Household
 from app.main.model.HouseholdMember import HouseholdMember
 from app.main.model.Member import Member
+from app.main.service.member_service import create_new_member, validate_members_insertion
 
 
 def create_new_household(data):
     new_household = Household(
         type=data.get("type", 0)
     )
+    members = []
+    if data.get("members", None):
+        result = validate_members_insertion(data["members"])
+        # if there are no existing member with same nric
+        if len(result) == 0:
+            for member in data["members"]:
+                result = create_new_member(member)
+                if result["status_code"] >= 400:
+                    return result["response"], result["status_code"]
+                else:
+                    members.append(result["data"])
+                    new_household.members.append(result["data"])
+
     save_changes(new_household)
     response_object = {
         'status': 'success',
@@ -68,10 +82,13 @@ def get_all_household():
 def get_a_household(household_id):
     return Household.query.filter_by(household_id=household_id).first()
 
+
 """ 
 delete all members found from the household from the database and also delete the household from database
 remove the association in the process
 """
+
+
 def delete_household_and_members(household_id):
     household = Household.query.filter_by(household_id=household_id).first()
     if not household:
@@ -103,7 +120,7 @@ def get_all_household_student_with_filter(request=None):
             less_than_age_set.add(household)
         household_list.append(less_than_age_set)
 
-    #total_income filter
+    # total_income filter
     if "total_income" in request:
         total_income_set = set()
         result = db.session.query(Household). \
@@ -150,7 +167,6 @@ def get_all_household_student_with_filter(request=None):
         household_type_set = set()
         for household in result.all():
             household_type_set.add(household)
-        print(household_type_set)
         household_list.append(household_type_set)
 
     if not household_list:
@@ -160,10 +176,13 @@ def get_all_household_student_with_filter(request=None):
         result = result.intersection(household)
     return list(result)
 
+
 """ 
 delete memeber from household. It remove the association in household_member.
 It does not delete member from the database.
 """
+
+
 def delete_member_from_household(household_id, member_id):
     household_member = HouseholdMember.query.filter_by(household_id=household_id, member_id=member_id).first()
     if not household_member:
