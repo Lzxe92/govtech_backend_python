@@ -5,6 +5,7 @@ a [flask](https://flask.palletsprojects.com/) application
   
 ## Database Setup Guide
 * Create a database, named govtech_household_dev for this project
+* Create a database, named govtech_household_preprod for testing 
 * Database User and Password for development can be set at [/app/main/config.py](app/main/config.py)
 
 ## Data Dictionary
@@ -31,11 +32,13 @@ a [flask](https://flask.palletsprojects.com/) application
 3. Default endpoint is running at http://localhost:5000 
 
 ### Test Guide
-* Unit test are located at /test.
-1. Run the code below to run the unit test on the controllers
+* Unit & Integration test are located at /test.
+1. Setup Testing database at TestingConfig [/app/main/config.py](app/main/config.py)
+2. Run the code below to run the unit test on the controllers
     ```
     manage.py test
     ```
+3. Not 100% was done but just a POC at the moment
 
 ### Endpoints for assignment 
 * API documentation http://localhost:5000/docs/

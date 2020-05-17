@@ -12,7 +12,7 @@ from app.main.service.member_service import create_new_member, validate_members_
 
 def create_new_household(data):
     new_household = Household(
-        type=data.get("type", 0)
+        type=data.get("type", 1)
     )
     members = []
     if data.get("members", None):
@@ -26,6 +26,12 @@ def create_new_household(data):
                 else:
                     members.append(result["data"])
                     new_household.members.append(result["data"])
+        else:
+            response_object = {
+                'status': 'failure',
+                'message': 'Invalid request, request contains nric that is already in the database.'
+            }
+            return response_object, 409
 
     save_changes(new_household)
     response_object = {

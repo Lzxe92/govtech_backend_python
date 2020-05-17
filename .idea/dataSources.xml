@@ -7,5 +7,11 @@
       <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
       <jdbc-url>jdbc:sqlite:C:\Users\ericl\PycharmProjects\GovTech_Backend_Python\app\main\flask_boilerplate_main.db</jdbc-url>
     </data-source>
+    <data-source source="LOCAL" name="govtech_test" uuid="c0d8e3b2-ac06-4070-a675-d7d2f6dbc1b4">
+      <driver-ref>sqlite.xerial</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
+      <jdbc-url>jdbc:sqlite:C:\Users\ericl\PycharmProjects\GovTech_Backend_Python\app\main\govtech_test.db</jdbc-url>
+    </data-source>
   </component>
 </project>
