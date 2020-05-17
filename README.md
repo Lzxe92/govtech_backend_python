@@ -4,8 +4,8 @@ a [flask](https://flask.palletsprojects.com/) application
 
   
 ## Database Setup Guide
-* Create a database, named govtech_household_dev for this project
-* Create a database, named govtech_household_preprod for testing 
+* Create a database, named `govtech_household_dev` for this project
+* Create a database, named `govtech_household_preprod` for testing 
 * Database User and Password for development can be set at [/app/main/config.py](app/main/config.py)
 
 ## Data Dictionary
@@ -22,12 +22,12 @@ a [flask](https://flask.palletsprojects.com/) application
     ```
 2. Run the code below to populate the database. Setup the database first by following "Database Setup Guide" at the top.
     ```
-    manage.py db upgrade
-    manage.py seed
+    python manage.py db upgrade
+    python manage.py seed
     ```   
 2. Run the code below to Start the App at Development Mode
     ```
-    manage.py run
+    python manage.py run
     ```
 3. Default endpoint is running at http://localhost:5000 
 
@@ -36,12 +36,12 @@ a [flask](https://flask.palletsprojects.com/) application
 1. Setup Testing database at TestingConfig [/app/main/config.py](app/main/config.py)
 2. Run the code below to run the unit test on the controllers
     ```
-    manage.py test
+    python manage.py test
     ```
 3. Not 100% was done but just a POC at the moment
 
 ### Endpoints for assignment 
-* API documentation http://localhost:5000/docs/
+* API documentation http://localhost:5000/docs/ (it's buggy, didnt have time to fix it, but feel free to take a look at it)
 1. Create Household
 
     As this app is designed with relationship database in mind. Members and household are on a different table, they are linked up through an association table.
