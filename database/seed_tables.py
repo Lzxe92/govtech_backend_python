@@ -23,7 +23,7 @@ def seed_tables():
         annual_income=21600,
         occupation_type=0,
         marital_status=1,
-        spouse_nric="S0910139Z"
+        spouse_nric="S0910102Z"
     ))
 
     household_list[0].members.append(Member(
@@ -34,7 +34,7 @@ def seed_tables():
         annual_income=31600,
         occupation_type=2,
         marital_status=1,
-        spouse_nric="S0910139Z"
+        spouse_nric="S0910101Z"
     ))
 
     household_list[0].members.append(Member(
