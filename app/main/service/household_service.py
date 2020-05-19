@@ -148,7 +148,7 @@ def get_all_household_student_with_filter(request=None):
             "select household.household_id from member "
             "INNER join household_member on member.member_id = household_member.member_id  "
             "INNER join household on household_member.household_id = household.household_id "
-            "inner join member m2 on member.spouse_nric = m2.spouse_nric "
+            "inner join member m2 on member.nric = m2.spouse_nric "
             "where member.marital_status=1 "
             "GROUP BY household.household_id "
             "having count(household.household_id) >=2")
